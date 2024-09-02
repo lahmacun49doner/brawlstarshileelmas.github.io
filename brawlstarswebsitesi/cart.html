@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepet</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.imgur.com/IpkrkEO.jpg'); /* Resim URL'sini buraya ekleyin */
+            background-size: cover; /* Resmin sayfayı kaplamasını sağlar */
+            background-position: center; /* Resmin ortalanmasını sağlar */
+        }
+        .header {
+            padding: 10px 20px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .button-container {
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: large;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button-container button:hover {
+            transform: scale(1.05);
+        }
+        .button-container .empty-cart {
+            background-color: red;
+            color: white;
+        }
+        .button-container .purchase {
+            background-color: green;
+            color: white;
+        }
+        .button-container .homepage {
+            background-color: lime;
+            color: white;
+        }
+        .cart-items {
+            margin: 20px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .cart-items img {
+            width: 100px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .cart-items p {
+            display: inline;
+            margin: 0;
+        }
+
+        /* Modal stilleri */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeOut 0.3s forwards;
+        }
+        .modal.show {
+            display: flex;
+            opacity: 1;
+            animation: fadeIn 0.3s forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        .modal-content p {
+            margin: 20px 0;
+        }
+        .modal-content button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: large;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .modal-content button:hover {
+            transform: scale(1.05);
+        }
+        .modal-content .confirm {
+            background-color: red;
+            color: white;
+        }
+        .modal-content .cancel {
+            background-color: gray;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sepet</h1>
+    </div>
+    <div class="cart-items" id="cart-items">
+        <!-- Sepet içeriği buraya gelecek -->
+    </div>
+    <div class="button-container">
+        <button class="empty-cart" onclick="confirmEmptyCart()">Sepeti Boşalt</button>
+        <button class="purchase" onclick="purchaseItems()">Satın Al</button>
+        <button class="homepage" onclick="window.location.href='index.html';">Anasayfa</button>
+    </div>
+
+    <!-- Sepeti Boşalt Modalı -->
+    <div id="confirm-empty-cart-modal" class="modal">
+        <div class="modal-content">
+            <p>Sepeti boşaltmak istediğinizden emin misiniz?</p>
+            <button class="confirm" onclick="emptyCart()">Evet</button>
+            <button class="cancel" onclick="closeConfirmEmptyCartModal()">Hayır</button>
+        </div>
+    </div>
+
+    <script>
+        function displayCartItems() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsDiv = document.getElementById('cart-items');
+            cartItemsDiv.innerHTML = ''; // Temizle
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.innerHTML = `<img src="${item.src}" alt="${item.name}"><p>${item.name} - ${item.price} TL x ${item.quantity}</p>`;
+                cartItemsDiv.appendChild(itemDiv);
+            });
+        }
+
+        function emptyCart() {
+            localStorage.removeItem('cart');
+            displayCartItems();
+            closeConfirmEmptyCartModal();
+        }
+
+        function confirmEmptyCart() {
+            document.getElementById('confirm-empty-cart-modal').classList.add('show');
+        }
+
+        function closeConfirmEmptyCartModal() {
+            const modal = document.getElementById('confirm-empty-cart-modal');
+            modal.classList.remove('show');
+            modal.addEventListener('animationend', function() {
+                if (!modal.classList.contains('show')) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        function purchaseItems() {
+            // Burada satın alma işlemi yapılabilir
+            alert('Satın alma işlemi gerçekleştirildi.');
+        }
+
+        // Sayfa yüklendiğinde sepeti göster
+        window.onload = function() {
+            displayCartItems();
+        };
+    </script>
+</body>
+</html>

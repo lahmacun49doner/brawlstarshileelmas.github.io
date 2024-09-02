@@ -1,0 +1,41 @@
+/* Genel stiller */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Kategoriler konteyneri */
+.categories-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px;
+}
+
+/* Kategori stilleri */
+.category {
+    text-align: center;
+    border: 1px solid #ccc; /* Çerçeve rengi ve kalınlığı */
+    border-radius: 10px; /* Köşe yuvarlama */
+    padding: 10px; /* İç boşluk */
+    background-color: white; /* Arka plan rengi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Gölge efekti */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.category:hover {
+    transform: scale(1.05); /* Hover efektinde büyütme */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Hover efektinde gölge */
+}
+
+.category-item img {
+    width: 150px;
+    height: 150px; /* Görsel yüksekliği aynı olacak şekilde ayarlayın */
+    border-radius: 10px; /* Köşe yuvarlama */
+    object-fit: cover; /* Görselin nesneye uyum sağlaması */
+}
+
+.category-item p {
+    margin-top: 10px;
+}

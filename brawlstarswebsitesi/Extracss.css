@@ -1,0 +1,21 @@
+.diamond-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start; /* Soldan sağa hizalama */
+    margin-top: 50px;
+    width: 100%;
+    max-width: 1200px; /* Maksimum genişlik ayarı */
+    padding: 10px; /* İç boşluk */
+}
+
+.diamond-gallery img {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.diamond-gallery img:hover {
+    transform: scale(1.1);
+}

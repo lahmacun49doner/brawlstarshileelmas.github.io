@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altınlar</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.imgur.com/IpkrkEO.jpg'); /* Resim URL'sini buraya ekleyin */
+    background-size: cover; /* Resmin sayfayı kaplamasını sağlar */
+    background-position: center; /* Resmin ortalanmasını sağlar */
+        }
+        .header {
+            padding: 10px 20px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .homepage-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: lime;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: large;
+        }
+        .gold-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start; /* Soldan sağa hizalama */
+            margin: 20px auto;
+            width: 100%;
+            max-width: 1200px; /* Maksimum genişlik ayarı */
+            padding: 10px; /* İç boşluk */
+        }
+        .gold-gallery img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.2s;
+            cursor: pointer; /* Tıklanabilir işareti ekle */
+        }
+        .gold-gallery img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Modal stilleri */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 15px; /* Azaltıldı */
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: scaleIn 0.3s;
+            max-width: 300px; /* Maksimum genişlik */
+            width: 90%; /* Ekranın %90'ı */
+        }
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px
+        }
+    
+        .modal-content p {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .modal-content button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: lime;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: large;
+        }
+        .modal-content button:hover {
+            background-color: darkgreen;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Altınlar</h1>
+        <button class="homepage-button" onclick="window.location.href='index.html';">Anasayfa</button>
+    </div>
+    <div class="gold-gallery">
+        <img src="https://i.imgur.com/hWIKEyl.jpg" class="gold-image" alt="Altın 1" onclick="addToCart('https://i.imgur.com/hWIKEyl.jpg', 'Altın 1', 100)">
+        <img src="https://i.imgur.com/SLsRNaK.jpg" class="gold-image" alt="Altın 2" onclick="addToCart('https://i.imgur.com/SLsRNaK.jpg', 'Altın 2', 200)">
+        <img src="https://i.imgur.com/lNKgnmm.jpg" class="gold-image" alt="Altın 3" onclick="addToCart('https://i.imgur.com/lNKgnmm.jpg', 'Altın 3', 50000)">
+        <img src="https://i.imgur.com/RDT5pg3.jpg" class="gold-image" alt="Altın 4" onclick="addToCart('https://i.imgur.com/RDT5pg3.jpg', 'Altın 4', 9999)">
+        
+    </div>
+
+   
+    <!-- Ürün ekleme modalı -->
+    <div id="add-to-cart-modal" class="modal">
+        <div class="modal-content">
+            <img id="modal-image" src="" alt="Ürün Resmi">
+            <p>Ürün sepete eklendi!</p>
+            <button id="close-modal">Kapat</button>
+        </div>
+    </div>
+
+    <script>
+        function addToCart(src, name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let itemIndex = cart.findIndex(item => item.src === src);
+
+            if (itemIndex > -1) {
+                // Ürün zaten varsa miktarı arttır
+                cart[itemIndex].quantity++;
+            } else {
+                // Yeni ürün ekle
+                cart.push({ src, name, price, quantity: 1 });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayAddToCartModal(src); // Modalı göster
+        }
+
+        function displayAddToCartModal(src) {
+            const modal = document.getElementById('add-to-cart-modal');
+            const modalImage = document.getElementById('modal-image');
+            modalImage.src = src; // Ürün resmini modala ekle
+            modal.style.display = 'flex';
+        }
+
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('add-to-cart-modal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
